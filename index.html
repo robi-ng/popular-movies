@@ -1,0 +1,54 @@
+<html>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <head>
+        <style>
+            .card {
+                height: 370px;
+                margin: 30px 0;
+                padding: 0;
+            }
+            .mtitle {
+                padding: 10px;
+                font-weight: bold;
+            }
+            .release {
+                padding-left: 10px;
+                padding-bottom: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container" style="margin-top: 50px">
+            <div class="row">
+                <h4>Popular Movies</h4>
+            </div>
+            <div class="row" id="main-page">
+            </div>
+        </div>
+        <script>
+            var xhttp = new XMLHttpRequest();
+            var imageBaseUrl = "https://image.tmdb.org/t/p/w500";
+            var defaultImagePath = "b7464208c6cbb3fdbf8c6a17adc5f6e2.jpg";
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var responseJSON = JSON.parse(this.responseText);
+                    var target = document.querySelector('#main-page');
+                    responseJSON.results.forEach(function(element) {
+                        var div = document.createElement('div');
+                        var fullImagePath = element.backdrop_path ? imageBaseUrl + element.backdrop_path : defaultImagePath;
+                        div.className = "col-sm-6 card";
+                        var releaseDate = new Date(element.release_date);
+                        var month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                        formattedReleaseDate = month[releaseDate.getMonth()] + " " + releaseDate.getDate() + ", " + releaseDate.getFullYear();
+                        div.innerHTML = "<img src=\"" + fullImagePath + "\" height=\"281px\">" + 
+                                        "<span class=\"mtitle\">" + element.title + "</span>" +
+                                        "<span class=\"release\">" + formattedReleaseDate + "</span>";
+                        target.appendChild(div);
+                    });
+                }
+            };
+            xhttp.open("GET", "https://api.themoviedb.org/3/movie/popular?api_key=<API_KEY>", true);
+            xhttp.send();
+        </script>
+    </body>
+</html>
